@@ -4,15 +4,24 @@ using UnityEngine;
 
 public class ShipController : MonoBehaviour
 {
-    public float forwardSpeed = 25f, strafeSpeed = 7.5f, hoverSpeed = 5f;
+    public float forwardSpeed = 25f, strafeSpeed = 7.5f, hoverSpeed = 5f, boostSpeed = 50f;
     private float activeForwardSpeed, activeStrafeSpeed, activeHoverSpeed;
     private float forwardAcceleration = 2.5f, strafeAcceleration = 2f, hoverAcceleration = 2f;
+    private float boostTimer;
+    private bool boosting;
 
     public float lookRateSpeed = 90f;
     private Vector2 lookInput, screenCenter, mouseDistance;
 
     private float rollInput;
     private float rollSpeed = 90f, rollAcceleration = 3.5f;
+
+    //public CharacterController CharacterController { get; private set; }
+
+    private void Awake()
+    {
+        //CharacterController = GetComponent<CharacterController>();
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -24,7 +33,7 @@ public class ShipController : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         lookInput.x = Input.mousePosition.x;
         lookInput.y = Input.mousePosition.y;
@@ -45,5 +54,14 @@ public class ShipController : MonoBehaviour
         transform.position += transform.forward * activeForwardSpeed * Time.deltaTime;
         transform.position += (transform.right * activeStrafeSpeed * Time.deltaTime) + (transform.up * activeHoverSpeed * Time.deltaTime);
 
+        if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            forwardSpeed += boostSpeed;
+        }
+        else if (Input.GetKeyUp(KeyCode.LeftShift))
+        {
+            forwardSpeed -= boostSpeed;
+        }
+        
     }
 }
